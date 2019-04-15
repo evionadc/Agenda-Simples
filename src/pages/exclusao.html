@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Agenda Simples</title>
+    <link rel="stylesheet" href="./css/main.css" />
+</head>
+
+<body class="conteudo">
+    <header>
+        <h1 mt-header>Exclusão</h1>
+    </header>
+    <nav>
+        <a href="index.html" mt-destiny=".pagina">Home</a> |
+        <a href ="cadastro.html" mt-destiny=".pagina">Cadastro</a> |
+        <a href ="consulta.html" mt-destiny=".pagina">Consulta</a> |
+        <a href ="exclusao.html" mt-destiny=".pagina">Exclusão</a>
+    </nav>
+    <div class="pagina">
+        <form name ="exclusaoButton" action="exclusao" method="post">
+            <div>
+                <p></p>
+                <div>
+                    <label for="ID">ID: </label>
+                    <input id="inputID" type="number" name="ID" placeholder="Insira um ID">
+                    <p></p>
+                    <button>Excluir</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <p></p>
+    <div class="Mensagem" id="Resposta"></div>
+    <script>
+        document.exclusaoButton.onsubmit = async e =>{
+            e.preventDefault()
+            const form = e.target
+            const data =  new FormData()
+            const idInput = document.getElementById('inputID').value
+            const resultado = document.getElementById('Resposta')
+
+            if(!idInput){
+                resultado.innerHTML = "Insira um ID"
+            }
+            else{
+                data.append('id', idInput)
+
+                const options = {
+                    method:form.method,
+                    body: new URLSearchParams(data)
+                }
+                try{
+                    const resp = await fetch(form.action, options)
+                    const json = await resp.json()                        
+                    resultado.innerHTML = `Contato ${json.Nome} excluído com sucesso`
+                    
+                } catch(e){
+                    resultado.innerHTML = e
+                }
+            }
+
+        }
+
+    </script> 
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Agenda Simples</title>
+    <link rel="stylesheet" href="./css/main.css" />
+
+
+</head>
+
+<body class="conteudo">
+    <header>
+        <h1 mt-header>Cadastro</h1>
+    </header>
+    <nav>
+        <a href="index.html" mt-destiny=".pagina">Home</a> |
+        <a href="cadastro.html" mt-destiny=".pagina">Cadastro</a> |
+        <a href="consulta.html" mt-destiny=".pagina">Consulta</a> |
+        <a href="exclusao.html" mt-destiny=".pagina">Exclusão</a>
+    </nav>
+    <div class="pagina">
+        <form name="cadastrarButton" action="cadastro" method="post">
+            <div>
+                <p></p>
+                <div>
+                    <label for="Nome">Nome: </label>
+                    <input id="inputName" type="text" name="Nome" placeholder="Insira um nome">
+                    
+                    <p></p>
+                    
+                    <label for="Email">Email: </label>
+                    <input id="inputMail" type="text" name="Email" placeholder="Insira um email">
+                    
+                    <p></p>
+                    
+                    <button>Cadastrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <p></p>
+    <div class="Mensagem" id="Resposta"></div>
+    <script>
+        document.cadastrarButton.onsubmit = async e => {
+            e.preventDefault()
+            const form = e.target
+            const data = new FormData()
+            const nomeinput = document.getElementById('inputName').value
+            const emailinput = document.getElementById('inputMail').value
+            const resultado = document.getElementById('Resposta')
+
+            if(!nomeinput || !emailinput){
+                resultado.innerHTML = "Insira o nome e o email"
+            }
+            else{
+            data.append('Nome', nomeinput)
+            data.append('Email', emailinput)
+
+            
+            const options = {
+                method: form.method,
+                body: new URLSearchParams(data)
+            }
+
+            
+            try {
+
+                const resp = await fetch(form.action, options)
+                const json = await resp.json()
+                resultado.innerHTML = `Contato salvo com sucesso, utilize a consulta para verificar o ID`
+            } catch (e) {
+                resultado.innerHTML = e
+            }
+        }
+        }
+    </script>
+</body>
+
+</html>

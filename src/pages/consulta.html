@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Agenda Simples</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <script src="./js/jquery.js"></script>
+</head>
+
+<body class="conteudo">
+    <header>
+        <h1 mt-header>Consulta</h1>
+    </header>
+    <nav>
+        <a href="index.html" mt-destiny=".pagina">Home</a> |
+        <a href="cadastro.html" mt-destiny=".pagina">Cadastro</a> |
+        <a href="consulta.html" mt-destiny=".pagina">Consulta</a> |
+        <a href="exclusao.html" mt-destiny=".pagina">Exclusão</a>
+    </nav>
+    <div class="pagina">
+        <form name="consultarButton" action="consulta" method="post">
+            <div>
+                <div>
+                    <p></p>
+                    <label for="Nome">Nome: </label>
+                    <input id="inputName" type="text" name="Nome" placeholder="Insira um nome">
+                </div>
+                <p></p>
+                <button>Consultar</button>
+            </div>
+        </form>
+
+        <p></p>
+        <div class="Mensagem" id="Resposta">
+
+        </div>
+    </div>
+
+    <script>
+        document.consultarButton.onsubmit = async e => {
+
+            e.preventDefault()
+            const form = e.target
+            const data = new FormData()
+            const valor = document.getElementById('inputName').value
+
+            if (valor == '') {
+                limpar()
+                const url = '/consulta'
+                fetch(url)
+                    .then(resp => resp.json())
+                    .then(resp => {
+                        const rows = resp
+                        const cabeçalhos = ["Nome", "Email", "ID"]
+                        CreateTableResult(cabeçalhos, rows)
+
+                    })
+
+            }
+            else {
+
+                data.append("Nome", valor)
+                const options = {
+                    method: form.method,
+                    body: new URLSearchParams(data)
+
+                }
+
+                const resultado = document.getElementById('Resposta')
+                limpar()
+                fetch(form.action, options)
+                    .then(resp => resp.json())
+                    .then(resp => {
+                        const rows = resp
+                        const cabeçalhos = ["Nome", "Email"]
+                        CreateTableResult(cabeçalhos, rows)
+
+                    })
+
+            }
+        }
+
+        function limpar() {
+            if (document.querySelectorAll('.Mensagem table')) {
+                const table = document.querySelectorAll('.Mensagem table').forEach(table => {
+                    document.querySelector('.Mensagem').removeChild(table)
+                })
+
+            }
+        }
+
+        function CreateTableResult(cabecalhos, itens) {
+            const div = document.querySelector('.Mensagem')
+            const table = document.createElement('table')
+            const header = document.createElement('thead')
+            const body = document.createElement('tbody')
+            for (let i = 0; i < cabecalhos.length; i++) {
+                let th = document.createElement('th')
+                th.innerHTML = cabecalhos[i]
+                header.appendChild(th)
+            }
+
+            for (let i = 0; i < itens.length; i++) {
+                let tr = document.createElement('tr')
+
+                let td1 = document.createElement('td')
+                td1.innerHTML = `${itens[i].Nome}`
+                tr.appendChild(td1)
+
+                let td2 = document.createElement('td')
+                td2.innerHTML = `${itens[i].Email}`
+                tr.appendChild(td2)
+
+                if (cabecalhos.length > 2) {
+                    let td3 = document.createElement('td')
+                    td3.innerHTML = `${itens[i].id}`
+                    tr.appendChild(td3)
+                }
+
+                body.appendChild(tr)
+            }
+
+            table.appendChild(header)
+            table.appendChild(body)
+            div.appendChild(table)
+        }
+    </script>
+</body>
+
+</html>
